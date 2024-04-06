@@ -14,7 +14,6 @@ pip install pandas
 pip install plotly
 ```
 
-
 ## Utilisation
 
 1. Assurez-vous d'avoir une base de données de ventes de jeux vidéo au format CSV nommée `vgsales.csv` dans le même répertoire que le code.
@@ -31,4 +30,3 @@ pip install plotly
 ## Auteur
 
 Ce projet a été réalisé par Lukas CHAMI, Enzo Nussbaum et Benedict Nenere.
-
