@@ -17,7 +17,12 @@ pip install plotly
 ## Utilisation
 
 1. Assurez-vous d'avoir une base de données de ventes de jeux vidéo au format CSV nommée `vgsales.csv` dans le même répertoire que le code.
-2. Lancez l'application en exécutant le fichier `app.py`.
+2. Lancez l'application en exécutant le fichier `app.py` :
+
+````python
+python app.py
+````
+
 3. Accédez à l'application dans votre navigateur en ouvrant l'URL indiquée dans la console.
 
 ## Fonctionnalités
