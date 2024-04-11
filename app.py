@@ -14,13 +14,18 @@ platform_options = [{'label': platform, 'value': platform} for platform in sorte
 
 app = Dash(__name__)
 
+num_games = len(df)
+
 app.layout = html.Div([
     html.Div([
-        html.H1('Game Database Analyser', style={'textAlign': 'center', 'color': 'blue', 'police': 'Roboto'}),
+        html.H1('Game Database Analyser', style={'textAlign': 'center', 'color': 'blue', 'fontFamily': 'Roboto'}),
+    ]),
+    html.Div([
+        html.P(f'Nombre de jeux dans la base de données : {num_games}', style={'textAlign': 'center'})
     ]),
     dcc.Input(id='search-name', type='text', placeholder='Rechercher par nom...'),
     dcc.Dropdown(id='filter-year', options=year_options, placeholder='Filtrer par année...'),
-    dcc.Dropdown(id='filter-publisher', options=publisher_options, placeholder='Filtrer par éditeur...'),
+    dcc.Dropdown(id='filter-publisher', options=publisher_options, placeholder='Filtrer par éditeur...'),  # Add this line
     dcc.Dropdown(id='filter-genre', options=genre_options, placeholder='Filtrer par genre...'),
     dcc.Dropdown(id='filter-platform', options=platform_options, placeholder='Filtrer par plateforme...'),
     dash_table.DataTable(id='filtered-data', columns=[{"name": i, "id": i} for i in df.columns], page_size=10),
@@ -31,6 +36,8 @@ app.layout = html.Div([
     dcc.Graph(id='genre-sales-pie-chart'),
     html.Footer('Copyright © 2024 Game Database Analyser. All rights reserved.', style={'textAlign': 'center'})
 ])
+
+
 
 @app.callback(
     Output('filtered-data', 'data'),
