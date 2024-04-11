@@ -18,14 +18,15 @@ num_games = len(df)
 
 app.layout = html.Div([
     html.Div([
-        html.H1('Game Database Analyser', style={'textAlign': 'center', 'color': 'blue', 'fontFamily': 'Roboto'}),
+        html.H1('Game Database Analyser', style={'textAlign': 'center', 'color': '#F400A1', 'fontFamily': 'Roboto'}),
     ]),
     html.Div([
-        html.P(f'Nombre de jeux dans la base de données : {num_games}', style={'textAlign': 'center'})
+        html.P(f'Nombre de jeux dans la base de données : {num_games}', style={'textAlign': 'center'}),
+        html.P(f'les ventes globales sont les copies vendues', style={'textAlign': 'center'})
     ]),
     dcc.Input(id='search-name', type='text', placeholder='Rechercher par nom...'),
     dcc.Dropdown(id='filter-year', options=year_options, placeholder='Filtrer par année...'),
-    dcc.Dropdown(id='filter-publisher', options=publisher_options, placeholder='Filtrer par éditeur...'),  # Add this line
+    dcc.Dropdown(id='filter-publisher', options=publisher_options, placeholder='Filtrer par éditeur...'),
     dcc.Dropdown(id='filter-genre', options=genre_options, placeholder='Filtrer par genre...'),
     dcc.Dropdown(id='filter-platform', options=platform_options, placeholder='Filtrer par plateforme...'),
     dash_table.DataTable(id='filtered-data', columns=[{"name": i, "id": i} for i in df.columns], page_size=10),
@@ -121,7 +122,8 @@ def update_publisher_sales_bar_chart(search_name, filter_year, filter_publisher,
     publisher_sales = filtered_df.groupby('Publisher')['Global_Sales'].sum().reset_index()
     publisher_sales = publisher_sales.sort_values(by='Global_Sales', ascending=False).head(10)
     
-    fig = px.bar(publisher_sales, x='Publisher', y='Global_Sales', title='Ventes globales par éditeur (Top 10)')
+    fig = px.bar(publisher_sales, x='Global_Sales', y='Publisher', title='Ventes globales par éditeur (Top 10)', orientation='h', color='Global_Sales', color_continuous_scale='Plotly3')
+
     
     return fig
 
@@ -150,7 +152,7 @@ def update_platform_sales_bar_chart(search_name, filter_year, filter_publisher, 
     platform_counts = filtered_df.groupby('Platform').size().reset_index(name='Count')
     platform_counts = platform_counts.sort_values(by='Count', ascending=False).head(10)
     
-    fig = px.bar(platform_counts, x='Platform', y='Count', title='Nombre de jeux sortis par plateforme (Top 10)')
+    fig = px.bar(platform_counts, x='Platform', y='Count', title='Nombre de jeux sortis par plateforme (Top 10)', color='Count', color_continuous_scale='Sunset')
     
     return fig
 
@@ -180,7 +182,7 @@ def update_year_sales_bar_chart(search_name, filter_year, filter_publisher, filt
     year_sales = filtered_df.groupby('Year')['Global_Sales'].sum().reset_index()
     year_sales = year_sales.sort_values(by='Year')
 
-    fig = px.bar(year_sales, x='Year', y='Global_Sales', title='Ventes globales par année')
+    fig = px.bar(year_sales, x='Year', y='Global_Sales', title='Ventes globales par année', color='Global_Sales', color_continuous_scale='Magenta')
 
     return fig
 

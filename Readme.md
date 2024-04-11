@@ -1,8 +1,8 @@
-# Game Database Analyzer
+# Game Database Analyzer et devine le jeu
 
-Ce projet est une application web créée avec Dash qui permet d'analyser une base de données de ventes de jeux vidéo.
+Ce projet ontient deux applications Web construites avec Dash, une bibliothèque Python pour créer des applications web analytiques interactives.
 
-## Installation
+## prérequis
 
 1. Clonez ce dépôt sur votre machine locale.
 2. Assurez-vous d'avoir Python installé sur votre système.
@@ -14,24 +14,36 @@ pip install pandas
 pip install plotly
 ```
 
-## Utilisation
+## Le jeu vidéo (main.py)
 
-1. Assurez-vous d'avoir une base de données de ventes de jeux vidéo au format CSV nommée `vgsales.csv` dans le même répertoire que le code.
-2. Lancez l'application en exécutant le fichier `app.py` :
+### aperçu du jeu
 
-````python
+Dans cette application, les utilisateurs sont invités à deviner le nom d'un jeu vidéo en fonction des indices donnés. Le jeu tire aléatoirement un jeu vidéo à partir d'un ensemble de données de ventes de jeux vidéo et fournit des indices concernant ce jeu. Vous avez 5 chances pour trouver le jeu.
+
+A noter que le jeu est en version Beta, plusieurs bugs peuvent apparaître pouvant gêner la bonne utilisation du jeu, désolé par avance.
+
+### exécution du jeu
+
+Pour exécuter cette application, assurez-vous d'avoir Python et les bibliothèques requises installés. Exécutez ensuite le fichier main.py et accédez à l'application via votre navigateur web.
+
+```python
+python main.py
+```
+
+## Game Database Analyzer (app.py)
+
+### aperçu de l'analyse
+
+Cette application fournit une interface interactive pour explorer une base de données de ventes de jeux vidéo. Les utilisateurs peuvent filtrer les jeux par année, éditeur, genre et plateforme, et visualiser les données filtrées sous forme de tableau et de graphiques.
+
+### exécution de l'analyse
+
+Pareil pour exécuter cette application, assurez-vous d'avoir Python et les bibliothèques requises installés. Exécutez ensuite le fichier app.py et accédez à l'application via votre navigateur web.
+
+```python
 python app.py
-````
+```
 
-3. Accédez à l'application dans votre navigateur en ouvrant l'URL indiquée dans la console.
-
-## Fonctionnalités
-
-- Recherche de jeux par nom.
-- Filtrage des jeux par année, éditeur, genre et plateforme.
-- Affichage des jeux filtrés dans un tableau interactif.
-- Visualisation des ventes par région sous forme de graphique circulaire, mis à jour en temps réel en fonction des filtres sélectionnés.
-
-## Auteur
+## Auteurs
 
 Ce projet a été réalisé par Lukas Chami, Enzo Nussbaum et Benedict Nenere.
