@@ -1,6 +1,8 @@
 from dash import Dash, html, dcc, callback, Output, Input, dash_table
 import pandas as pd
 import plotly.express as px
+import os
+from flask import send_file
 
 df = pd.read_csv('vgsales.csv')
 
@@ -19,6 +21,7 @@ num_games = len(df)
 app.layout = html.Div([
     html.Div([
         html.H1('Game Database Analyser', style={'textAlign': 'center', 'color': '#F400A1', 'fontFamily': 'Roboto'}),
+        html.A(html.Button('Télécharger le PDF', id='download-pdf', n_clicks=0), href='/download-pdf'),
     ]),
     html.Div([
         html.P(f'Nombre de jeux dans la base de données : {num_games}', style={'textAlign': 'center'}),
@@ -216,5 +219,15 @@ def update_genre_sales_pie_chart(search_name, filter_year, filter_publisher, fil
 
     return fig
 
+
+@app.server.route('/download-pdf')
+def download_pdf():
+    pdf_path='data.pdf'
+    if os.path.exists(pdf_path):
+        return send_file(pdf_path, as_attachment=True)
+    else:
+        return 'Fichier non trouvé'
+    
+
 if __name__ == '__main__':
-    app.run_server  (debug=True)
+    app.run_server(debug=True)
