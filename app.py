@@ -222,7 +222,7 @@ def update_genre_sales_pie_chart(search_name, filter_year, filter_publisher, fil
 
 @app.server.route('/download-pdf')
 def download_pdf():
-    pdf_path='data.pdf'
+    pdf_path='Data_analayse.pdf'
     if os.path.exists(pdf_path):
         return send_file(pdf_path, as_attachment=True)
     else:
