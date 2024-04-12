@@ -31,9 +31,12 @@ def initialize_game():
 # Définir une fonction pour générer un nouvel indice
 def generate_hint(attempts):
     global game_title
-    if attempts >= len(hints):
+    if attempts == 1:
+        return f"Indice 1: {hints[0]}"
+    elif attempts > len(hints):
         return f"Désolé, vous avez utilisé tous vos essais. Le jeu était {game_title}."
-    return f"Indice {attempts + 1}: {hints[attempts]}"
+    else:
+        return f"Indice {attempts}: {hints[attempts - 1]}"
 
 # Créer une application Dash
 app = Dash(__name__)
@@ -43,6 +46,9 @@ provided_hints = []
 
 # Initialiser le score
 score = 0
+
+# Initialiser le nombre d'essais
+attempts = 1
 
 # Mise en page de l'application
 app.layout = html.Div(style={'textAlign': 'center'}, children=[
@@ -57,7 +63,7 @@ app.layout = html.Div(style={'textAlign': 'center'}, children=[
         ),
         html.Button('Soumettre', id='submit-button', n_clicks=0),
         html.Div(id='result-output', style={'display': 'none'}),
-        html.Button('Recommencer', id='restart-button', n_clicks=0, style={'display': 'none'}),
+        html.Button('Recommencer', id='restart-button', n_clicks=0),
         html.Div(id='score-output', children=f"Score: {score}")
     ])
 ])
@@ -67,30 +73,29 @@ app.layout = html.Div(style={'textAlign': 'center'}, children=[
     [Output('hint-output', 'children'),
      Output('result-output', 'children'),
      Output('result-output', 'style'),
-     Output('restart-button', 'style'),
      Output('score-output', 'children')],
     [Input('submit-button', 'n_clicks'),
      Input('restart-button', 'n_clicks')],
     [State('user-input', 'value')]
 )
 def update_hint_and_result(submit_clicks, restart_clicks, user_input):
-    global game_title, hints, provided_hints, score
+    global game_title, hints, provided_hints, score, attempts
     if dash.callback_context.triggered:
         trigger_id = dash.callback_context.triggered[0]['prop_id'].split('.')[0]
         if trigger_id == 'restart-button':
             hints = initialize_game()
             provided_hints = []
             score = 0
-            return "", "", {'display': 'none'}, {'display': 'none'}, f"Score: {score}"
+            attempts = 1  # Réinitialiser le nombre d'essais à 1
+            return "", "", {'display': 'none'}, f"Score: {score}"
         elif trigger_id == 'submit-button' and submit_clicks > 0:
             if isinstance(provided_hints, str) and "Félicitations" in provided_hints:
                 hints = initialize_game()
                 provided_hints = []
                 score += 1
             if user_input.lower() == game_title.lower():
-                return f"Félicitations ! Vous avez deviné le jeu correctement. Le jeu était bien {game_title}.", "", {'display': 'none'}, {'display': 'inline-block'}, f"Score: {score}"
+                return f"Félicitations ! Vous avez deviné le jeu correctement. Le jeu était bien {game_title}.", "", {'display': 'none'}, f"Score: {score}"
             else:
-                attempts = submit_clicks - 1
                 hint = generate_hint(attempts)
                 provided_hints.append(hint)
                 hint_table = dash_table.DataTable(
@@ -99,8 +104,9 @@ def update_hint_and_result(submit_clicks, restart_clicks, user_input):
                     style_cell={'textAlign': 'center'},
                     style_table={'margin': 'auto'}
                 )
-                return hint_table, "", {'display': 'block'}, {'display': 'none'}, f"Score: {score}"
-    return "", "", {'display': 'none'}, {'display': 'none'}, f"Score: {score}"
+                attempts += 1  # Incrémenter le nombre d'essais
+                return hint_table, "", {'display': 'block'}, f"Score: {score}"
+    return "", "", {'display': 'none'}, f"Score: {score}"
 
 # Exécuter l'application
 if __name__ == '__main__':
