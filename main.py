@@ -2,22 +2,17 @@ from dash import Dash, html, dcc, callback, Input, Output, State, dash_table
 import pandas as pd
 import dash
 
-# Charger les données à partir du fichier CSV
 df = pd.read_csv('vgsales.csv')
 
-# Déclarer la variable game_title comme globale
 game_title = ''
 
-# Définir une fonction pour initialiser un nouveau jeu
 def initialize_game():
     global game_title
-    # Sélectionner un jeu aléatoire dans le dataset
+
     random_game = df.sample()
 
-    # Titre du jeu à deviner
     game_title = random_game.iloc[0]['Name']
 
-    # Indications initiales
     hints = [
         f"Le jeu a été publié en {random_game.iloc[0]['Year']}.",
         f"Le genre du jeu est {random_game.iloc[0]['Genre']}.",
@@ -28,7 +23,6 @@ def initialize_game():
 
     return hints
 
-# Définir une fonction pour générer un nouvel indice
 def generate_hint(attempts):
     global game_title
     if attempts == 1:
@@ -38,19 +32,14 @@ def generate_hint(attempts):
     else:
         return f"Indice {attempts}: {hints[attempts - 1]}"
 
-# Créer une application Dash
 app = Dash(__name__)
 
-# Stocker les indices fournis à l'utilisateur
 provided_hints = []
 
-# Initialiser le score
 score = 0
 
-# Initialiser le nombre d'essais
 attempts = 1
 
-# Mise en page de l'application
 app.layout = html.Div(style={'textAlign': 'center'}, children=[
     html.Div(style={'margin': 'auto'}, children=[
         html.H1("Devinez le jeu vidéo !"),
@@ -64,11 +53,14 @@ app.layout = html.Div(style={'textAlign': 'center'}, children=[
         html.Button('Soumettre', id='submit-button', n_clicks=0),
         html.Div(id='result-output', style={'display': 'none'}),
         html.Button('Recommencer', id='restart-button', n_clicks=0),
-        html.Div(id='score-output', children=f"Score: {score}")
+        html.Div(id='score-output', children=f"Score: {score}"),
+        html.Div([
+            html.Div("Note: Le jeu n'affine pas les résultats de la recherche. Veuillez taper le nom du jeu exact pour le deviner. Si vous voulez voud aider, lancer la base de données de jeux vidéo. Chaque indice donné correspond à un filtre de la base de données. Bonne chance !", style={'background-color': '#f8d7da', 'border': '1px solid #f5c6cb', 'color': '#721c24', 'padding': '10px', 'border-radius': '5px', 'margin-bottom': '10px'}),
+            html.Div("PS : Pour voir la base de données de jeux vidéo, veuillez lancer le fichier app.py.", style={'background-color': '#d4edda', 'border': '1px solid #c3e6cb', 'color': '#155724', 'padding': '10px', 'border-radius': '5px'})
+        ], style={'margin-top': '20px'})
     ])
 ])
 
-# Callback pour gérer le bouton de soumission et recommencer le jeu
 @app.callback(
     [Output('hint-output', 'children'),
      Output('result-output', 'children'),
@@ -86,7 +78,7 @@ def update_hint_and_result(submit_clicks, restart_clicks, user_input):
             hints = initialize_game()
             provided_hints = []
             score = 0
-            attempts = 1  # Réinitialiser le nombre d'essais à 1
+            attempts = 1
             return "", "", {'display': 'none'}, f"Score: {score}"
         elif trigger_id == 'submit-button' and submit_clicks > 0:
             if isinstance(provided_hints, str) and "Félicitations" in provided_hints:
@@ -104,11 +96,10 @@ def update_hint_and_result(submit_clicks, restart_clicks, user_input):
                     style_cell={'textAlign': 'center'},
                     style_table={'margin': 'auto'}
                 )
-                attempts += 1  # Incrémenter le nombre d'essais
+                attempts += 1 
                 return hint_table, "", {'display': 'block'}, f"Score: {score}"
     return "", "", {'display': 'none'}, f"Score: {score}"
 
-# Exécuter l'application
 if __name__ == '__main__':
     hints = initialize_game()
     app.run_server(debug=True, port=8080)
