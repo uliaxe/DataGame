@@ -46,4 +46,4 @@ python app.py
 
 ## Auteurs
 
-Ce projet a été réalisé par Lukas Chami, Enzo Nussbaum et Benedict Nenert.
+Ce projet a été réalisé par Lukas Chami, Enzo Nussbaum et Bénédict Nenert.
